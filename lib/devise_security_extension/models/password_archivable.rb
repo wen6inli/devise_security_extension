@@ -26,7 +26,12 @@ module Devise
         end
 
         if self.class.deny_old_passwords > 0 and not self.password.nil?
-          old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords)
+          if defined?(ActiveRecord) && self.is_a?(ActiveRecord::Base)
+            old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords)
+          else 
+            old_passwords_including_cur_change = self.old_passwords.order_by(:id.desc).limit(self.class.deny_old_passwords)
+          end
+
           old_passwords_including_cur_change << OldPassword.new(old_password_params)  # include most recent change in list, but don't save it yet!
           old_passwords_including_cur_change.each do |old_password|
             dummy                    = self.class.new
@@ -51,7 +56,13 @@ module Devise
         if self.encrypted_password_changed?
           if self.class.password_archiving_count.to_i > 0
             self.old_passwords.create! old_password_params
-            self.old_passwords.order(:id).reverse_order.offset(self.class.password_archiving_count).destroy_all
+            # self.old_passwords.order(:id).reverse_order.offset(self.class.password_archiving_count).destroy_all
+            if defined?(ActiveRecord) && self.is_a?(ActiveRecord::Base)
+              self.old_passwords.order(:id).reverse_order.offset(self.class.password_archiving_count).destroy_all
+            else 
+              self.old_passwords.order_by(:id.desc).skip(self.class.deny_old_passwords).destroy_all
+            end
+
           else
             self.old_passwords.destroy_all
           end

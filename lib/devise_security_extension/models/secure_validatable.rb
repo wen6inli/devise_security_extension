@@ -76,7 +76,7 @@ module Devise
       private
         def has_uniqueness_validation_of_login?
           validators.any? do |validator|
-            validator.validator.class.name =~ /::Validations::UniquenessValidator$/) &&
+            validator.validator.class.name =~ /::Validations::UniquenessValidator$/ &&
               validator.attributes.include?(login_attribute)
           end
         end
