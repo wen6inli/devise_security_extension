@@ -1,5 +1,3 @@
-require 'devise_security_extension/hooks/expirable'
-
 module Devise
   module Models
     # Deactivate the account after a configurable amount of time.  To be able to 
@@ -17,12 +15,6 @@ module Devise
     # 
     module Expirable
       extend ActiveSupport::Concern
-
-      # Updates +last_activity_at+, called from a Warden::Manager.after_set_user hook.
-      def update_last_activity!
-        self.update_column(:last_activity_at, Time.now.utc) if self.respond_to? :update_column
-        self.update_attributes({:last_activity_at => Time.now.utc}) if self.respond_to? :update_attributes
-      end
 
       # Tells if the account has expired
       #

@@ -33,7 +33,6 @@ Gem::Specification.new do |s|
     "devise_security_extension.gemspec",
     "lib/devise_security_extension.rb",
     "lib/devise_security_extension/controllers/helpers.rb",
-    "lib/devise_security_extension/hooks/expirable.rb",
     "lib/devise_security_extension/hooks/password_expirable.rb",
     "lib/devise_security_extension/hooks/session_limitable.rb",
     "lib/devise_security_extension/models/expirable.rb",
